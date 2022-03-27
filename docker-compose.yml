@@ -1,0 +1,52 @@
+version: "3.7"
+services:
+    app:
+      build:
+        args:
+          user: fabiano
+          uid: 1000
+        context: ./
+        dockerfile: Dockerfile
+      image: gerirpessoas
+      container_name: gerirpessoas-app
+      restart: unless-stopped
+      working_dir: /var/www/
+      volumes:
+        - ./:/var/www
+      networks:
+        - gerirpessoas
+        
+    postgres:
+        image: postgres:10.5
+        container_name: gerirpessoas-db
+        restart: always
+        environment:
+          - POSTGRES_USER=postgres
+          - POSTGRES_PASSWORD=postgres
+          - POSTGRES_DB=gerirpessoas-db
+        logging:
+          options:
+            max-size: 10m
+            max-file: "3"
+        ports:
+          - '5438:5432'
+        volumes: 
+          - ./docker-compose/postgres/init_db.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
+        networks:
+          - gerirpessoas
+
+    nginx:
+      image: nginx:1.17-alpine
+      container_name: gerirpessoas-nginx
+      restart: unless-stopped
+      ports:
+        - 8100:80
+      volumes:
+        - ./:/var/www
+        - ./docker-compose/nginx:/etc/nginx/conf.d
+      networks:
+        - gerirpessoas
+
+networks:
+  gerirpessoas:
+    driver: bridge
