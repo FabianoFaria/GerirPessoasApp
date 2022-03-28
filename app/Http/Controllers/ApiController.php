@@ -2,17 +2,122 @@
 
 namespace App\Http\Controllers;
 
+use JWTAuth;
 use Illuminate\Http\Request;
-use App\Models\Pessoa;
 use Illuminate\Support\Facades\DB;
+use App\Models\Pessoa;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Validator;
 
 class ApiController extends Controller
 {
-    //
+    // Funções relevantes ao login e logou de usuários
+    public function register(Request $request)
+    {
+    	//Validate data
+        $data = $request->only('name', 'email', 'password');
+        $validator = Validator::make($data, [
+            'name' => 'required|string',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|string|min:6|max:50'
+        ]);
+
+        //Retorna resposta de falha quando o request não é válido
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->messages()], 200);
+        }
+
+        //Request é válido, gerar novo usuário
+        $user = User::create([
+        	'name' => $request->name,
+        	'email' => $request->email,
+        	'password' => bcrypt($request->password)
+        ]);
+
+        //Usuário criado, retorna respota de sucesso.
+        return response()->json([
+            'success' => true,
+            'message' => 'Usuário criado com sucesso.',
+            'data' => $user
+        ], Response::HTTP_OK);
+    }
+
+    public function authenticate(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+
+        //valid credential
+        $validator = Validator::make($credentials, [
+            'email' => 'required|email',
+            'password' => 'required|string|min:6|max:50'
+        ]);
+
+        //Retorna resposta de falha quando o request não é válido
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->messages()], 200);
+        }
+
+        //Request é válido
+        //Gera o token
+        try {
+            if (! $token = JWTAuth::attempt($credentials)) {
+                return response()->json([
+                	'success' => false,
+                	'message' => 'Credênciais de login estão incoretas.',
+                ], 400);
+            }
+        } catch (JWTException $e) {
+    	return $credentials;
+            return response()->json([
+                	'success' => false,
+                	'message' => 'Não foi possícel gera o Token.',
+                ], 500);
+        }
+
+        //Token criado, retorna com sucesso e responde com o Token jwt
+        return response()->json([
+            'success' => true,
+            'token' => $token,
+        ]);
+
+    }
+
+    public function logout(Request $request)
+    {
+        //Válida a credencial
+        $validator = Validator::make($request->only('token'), [
+            'token' => 'required'
+        ]);
+
+        //Retorna resposta de falha quando o request não é válido
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->messages()], 200);
+        }
+
+		//Request é validado, efetua o logout        
+        try {
+            JWTAuth::invalidate($request->token);
+ 
+            return response()->json([
+                'success' => true,
+                'message' => 'Usuário efetuou o Logout.'
+            ]);
+        } catch (JWTException $exception) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Desculpa, o usuário não pode efetuar o Logout'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    // Funções relevantes a manipulação do recursos Pessoas
     public function getPessoas() {
         // Lógica para carregar todos os registros de pessoas vai aqui
-        $pessoas = Pessoa::where('status', 'A')->get()->toJson(JSON_PRETTY_PRINT);
-        return response($pessoas, 200);
+        // Efetuando o caregamento apenas de pessoas com status 'A'
+        $pessoasLista = Pessoa::where('status', 'A')->paginate(15);
+        return response()->json($pessoasLista, 200);
 
     }
 
@@ -34,7 +139,6 @@ class ApiController extends Controller
         $statusQuery = DB::insert('insert into pessoas (pessoa_nome, status, data_criacao, data_atualizacao) 
                                     values (?, ?, ?, ?)', ["$request->nome", "A", date("Y-m-d H:i:s"), date("Y-m-d H:i:s")]);
 
-        var_dump($statusQuery);
         if($statusQuery){
 
             return response()->json([
