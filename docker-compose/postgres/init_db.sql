@@ -1,13 +1,17 @@
     
 CREATE TABLE pessoas (
-    pessoa_id serial PRIMARY KEY,
+    id serial PRIMARY KEY,
     pessoa_nome VARCHAR ( 255 ) UNIQUE NOT NULL,
-    status VARCHAR ( 1 ) NOT NULL
+    status VARCHAR ( 1 ) NOT NULL,
+    data_criacao TIMESTAMP, 
+    data_atualizacao TIMESTAMP
 );
 
-INSERT INTO pessoas(pessoa_nome, status)
-VALUES ('Pessoa B', 'A');
-INSERT INTO pessoas(pessoa_nome, status)
-VALUES ('Pessoa A', 'A');
-INSERT INTO pessoas(pessoa_nome, status)
-VALUES ('Pessoa C', 'A');
+SET TIMEZONE TO 'America/Sao_Paulo';
+
+INSERT INTO pessoas(pessoa_nome, status, data_criacao, data_atualizacao)
+VALUES ('Pessoa B', 'A', (SELECT NOW()), (SELECT NOW()));
+INSERT INTO pessoas(pessoa_nome, status, data_criacao, data_atualizacao)
+VALUES ('Pessoa A', 'A', (SELECT NOW()), (SELECT NOW()));
+INSERT INTO pessoas(pessoa_nome, status, data_criacao, data_atualizacao)
+VALUES ('Pessoa C', 'A', (SELECT NOW()), (SELECT NOW()));
