@@ -7,18 +7,27 @@ use Illuminate\Support\Facades\Schema;
 class CreatePessoasTable extends Migration
 {
     /**
+     * The database connection that should be used by the migration.
+     *
+     * @var string
+     */
+    protected $connection = 'pgsql';
+
+    /**
      * Run the migrations.
      *
      * @return void
      */
     public function up()
     {
+        Schema::dropIfExists('pessoas');
+
         Schema::create('pessoas', function (Blueprint $table) {
-            $table->id();
-            $table->pessoa_nome();
-            $table->status();
-            $table->data_criacao();
-            $table->data_atualizacao();
+            $table->increments('id');
+            $table->string('pessoa_nome', 100);
+            $table->string('status', 1);
+            $table->timestamp('data_criacao', 0);
+            $table->timestamp('data_atualizacao', 0);
         });
     }
 

@@ -1,64 +1,174 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Gestão de pessoas Rest API
 
-## About Laravel
+Aplicativo com objetivo de gerenciar os recurso pessoas.
+Onde o usuário efetua o cadastro e login, então efetua o CRUD de resursos Pessoas
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Pré requisitos para Instalação
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Ter instalado no ambiente de deploy, as seguintes tecnologias: 
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Docker Engine
+    Documentação e download: https://docs.docker.com/engine/
 
-## Learning Laravel
+- Docker Compose
+    Documentação e download: https://docs.docker.com/compose/install/
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Instalação
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Após clonar o projeto, configurar as variaveis de ambiente no arquivo .env
 
-## Laravel Sponsors
+```bash
+    cp .env.example .env
+```
+Editar o arquivo .env com o editor de sua preferência, neste arquivo, configurar principalmente as variaveis de configuração do aplicativo, as credenciais de banco de dados.
+Obs: Como este projeto foi desenvolvido para integrar dados com o Postgres Sql, é apropriado configurar o .env com os dados configurados no docker-composer.yml
+Obs: Ainda no arquivo .env, nomear o DB_HOST com o mesmo nome que a imagem do Postgres configurada no docker-compose.yml (Ex: 'DB_HOST=postgres')
+Após as configuraçõe no arquivo .env, efetuar a compilação da imagem do aplicativo
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+```bash
+    docker-compose build app
+```
 
-### Premium Partners
+Com a compilação comcluida, executar o ambiente, de preferência em segundo plano.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+```bash
+    docker-compose up -d
+```
 
-## Contributing
+Verificar se os contêineres foram gerados corretamente
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+    docker-compose ps
+```
 
-## Code of Conduct
+Após o ambiente estar rodando, iniciar o laravel
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+    docker-compose exec -u root app composer install
+```
 
-## Security Vulnerabilities
+Então, gerar uma chave única para o aplicativo
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+    docker-compose exec -u root app php artisan key:generate
+```
 
-## License
+Agora, vá até seu navegador e acesse o nome de domínio ou endereço IP do seu servidor na porta especificada no arquivo .env (Ex: )
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Gerar, atualizar, derrubar tabelas do banco de dados do postgres
+
+```bash
+    docker-compose exec -u root app php artisan migrate
+```
+
+'Semear' as tabelas de banco de dados geradas.
+
+```bash
+    docker-compose exec -u root app php artisan db:seed
+```
+
+## Documentação da API
+
+#### Cadastro do usuário
+
+```http
+  GET /api/items
+```
+
+| Parâmetro   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `api_key` | `string` | **Obrigatório**. A chave da sua API |
+
+Registra o usuário para efetuar o login.
+
+
+#### Login do usuário
+
+```http
+  GET /api/items
+```
+
+| Parâmetro   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `api_key` | `string` | **Obrigatório**. A chave da sua API |
+
+Efetua o login do usuário.
+
+#### Logout do usuário
+
+```http
+  GET /api/items
+```
+
+| Parâmetro   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `api_key` | `string` | **Obrigatório**. A chave da sua API |
+
+Efetua o logout do usuário.
+
+
+#### Retorna todos os itens
+
+```http
+  GET /api/items
+```
+
+| Parâmetro   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `api_key` | `string` | **Obrigatório**. A chave da sua API |
+
+Lista todos os recursos.
+
+#### Retorna um item
+
+```http
+  GET /api/items/${id}
+```
+
+| Parâmetro   | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `id`      | `string` | **Obrigatório**. O ID do item que você quer |
+
+Retorna o item especificado.
+
+#### Cria um item
+
+```http
+  POST /api/items
+```
+
+| Parâmetro   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `api_key` | `string` | **Obrigatório**. A chave da sua API |
+
+Cria um novo item.
+
+#### Atualiza um item
+
+```http
+  PUT /api/items/${id}
+```
+
+| Parâmetro   | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `id`      | `string` | **Obrigatório**. O ID do item que você quer |
+
+#### add(num1, num2)
+
+Atualiza um novo item.
+
+#### Deleta um item
+
+```http
+  DELETE /api/items/${id}
+```
+
+| Parâmetro   | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `id`      | `string` | **Obrigatório**. O ID do item que você quer |
+
+#### add(num1, num2)
+
+Remove o item especificado.
+

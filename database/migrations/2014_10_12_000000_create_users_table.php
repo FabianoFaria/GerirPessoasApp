@@ -7,12 +7,21 @@ use Illuminate\Support\Facades\Schema;
 class CreateUsersTable extends Migration
 {
     /**
+     * The database connection that should be used by the migration.
+     *
+     * @var string
+     */
+    protected $connection = 'pgsql';
+
+    /**
      * Run the migrations.
      *
      * @return void
      */
     public function up()
     {
+        Schema::dropIfExists('users');
+        
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');

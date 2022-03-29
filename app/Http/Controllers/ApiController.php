@@ -6,6 +6,7 @@ use JWTAuth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Pessoa;
+use App\Models\User;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
@@ -61,7 +62,7 @@ class ApiController extends Controller
         //Request é válido
         //Gera o token
         try {
-            if (! $token = JWTAuth::attempt($credentials)) {
+            if (! $token = \JWTAuth::attempt($credentials)) {
                 return response()->json([
                 	'success' => false,
                 	'message' => 'Credênciais de login estão incoretas.',

@@ -7,6 +7,13 @@ use Illuminate\Support\Facades\Schema;
 class CreateFailedJobsTable extends Migration
 {
     /**
+     * The database connection that should be used by the migration.
+     *
+     * @var string
+     */
+    protected $connection = 'pgsql';
+
+    /**
      * Run the migrations.
      *
      * @return void
