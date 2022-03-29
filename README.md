@@ -113,64 +113,58 @@ Efetua o logout do usuário.
 #### Retorna todos os itens
 
 ```http
-  GET /api/items
+  GET /api/pessoas
 ```
 
 | Parâmetro   | Tipo       | Descrição                           |
 | :---------- | :--------- | :---------------------------------- |
-| `api_key` | `string` | **Obrigatório**. A chave da sua API |
+| Nenhum parametro necessário |
 
 Lista todos os recursos.
 
 #### Retorna um item
 
 ```http
-  GET /api/items/${id}
+  GET /api/pessoas/${id}
 ```
 
 | Parâmetro   | Tipo       | Descrição                                   |
 | :---------- | :--------- | :------------------------------------------ |
-| `id`      | `string` | **Obrigatório**. O ID do item que você quer |
+| `id`      | `int` | **Obrigatório**. O ID da pessoa selecionada |
 
-Retorna o item especificado.
 
 #### Cria um item
 
 ```http
-  POST /api/items
+  POST /api/pessoas
 ```
 
 | Parâmetro   | Tipo       | Descrição                           |
 | :---------- | :--------- | :---------------------------------- |
-| `api_key` | `string` | **Obrigatório**. A chave da sua API |
+| `pessoa_nome` | `string` | **Obrigatório**. Nome do recurso pessoa a ser cadastrado. |
 
-Cria um novo item.
 
 #### Atualiza um item
 
 ```http
-  PUT /api/items/${id}
+  PUT /api/pessoas/${id}
 ```
 
 | Parâmetro   | Tipo       | Descrição                                   |
 | :---------- | :--------- | :------------------------------------------ |
-| `id`      | `string` | **Obrigatório**. O ID do item que você quer |
+| `id`          | `int` | **Obrigatório**. O ID do item que você quer |
+| `pessoa_nome` | `string` | **Obrigatório**. O novo nome do recurso pessoa |
 
-#### add(num1, num2)
-
-Atualiza um novo item.
 
 #### Deleta um item
 
 ```http
-  DELETE /api/items/${id}
+  DELETE /api/pessoas/${id}
 ```
 
 | Parâmetro   | Tipo       | Descrição                                   |
 | :---------- | :--------- | :------------------------------------------ |
-| `id`      | `string` | **Obrigatório**. O ID do item que você quer |
+| `id`      | `int` | **Obrigatório**. O ID do item que você quer |
 
-#### add(num1, num2)
-
-Remove o item especificado.
+Remove a pessoa especificada.
 
