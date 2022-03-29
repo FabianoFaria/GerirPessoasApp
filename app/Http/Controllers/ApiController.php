@@ -13,7 +13,9 @@ use Illuminate\Support\Facades\Validator;
 
 class ApiController extends Controller
 {
-    // Funções relevantes ao login e logou de usuários
+    /*
+     Funções relevantes ao login e logou de usuários
+     */
     public function register(Request $request)
     {
     	//Validate data
@@ -113,7 +115,10 @@ class ApiController extends Controller
 
     }
 
-    // Funções relevantes a manipulação do recursos Pessoas
+    /*
+         Funções relevantes a manipulação do recursos Pessoas
+     */
+
     public function getPessoas() {
         // Lógica para carregar todos os registros de pessoas vai aqui
         // Efetuando o caregamento apenas de pessoas com status 'A'
@@ -124,6 +129,13 @@ class ApiController extends Controller
 
     public function getPessoa($id) {
         // Lógica para carregar o registro de uma pessoa vai aqui
+
+        if(!is_numeric($id)){
+            return response()->json([
+                "message" => "Parametro incoreto para esta chamada."
+            ], 400);
+        }
+
         if (Pessoa::where('id', $id)->exists()) {
             $pessoas = Pessoa::where('id', $id)->get()->toJson(JSON_PRETTY_PRINT);
             return response($pessoas, 200);
@@ -137,39 +149,63 @@ class ApiController extends Controller
     public function createPessoa(Request $request) {
         // Lógica para registrar uma pessoa vai aqui
 
-        $statusQuery = DB::insert('insert into pessoas (pessoa_nome, status, data_criacao, data_atualizacao) 
-                                    values (?, ?, ?, ?)', ["$request->nome", "A", date("Y-m-d H:i:s"), date("Y-m-d H:i:s")]);
+        //Efetua a validação dos dados da pessoa, verificando se já não existe no banco
+        $data = $request->only('pessoa_nome');
+        $validator = Validator::make($data, [
+            'pessoa_nome' => 'required|string|unique:pessoas'
+        ]);
 
-        if($statusQuery){
-
-            return response()->json([
-                "message" => "Registro de pessoa criado com sucesso!"
-            ], 201);
-        }else{
-
-            return response()->json([
-                "message" => "Ocorreu um erro ao registrar a pessoa, favor verificar os dados enviados!"
-            ], 400);
+        //Retorna resposta de falha quando o request não é válido
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->messages()], 200);
         }
+
+        $pessoa = Pessoa::create([
+        	'pessoa_nome' => $request->pessoa_nome,
+        	'status' => 'A'
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Recurso pessoa criado com sucesso.',
+            'data' => $pessoa
+        ], Response::HTTP_OK);
 
     }
 
     public function updatePessoa(Request $request, $id) {
         // Lógica para atualizar uma pessoa vai aqui
+
+        //Efetua a validação dos dados da pessoa, verificando se já não existe no banco
+
+        if(!is_numeric($id)){
+            return response()->json([
+                "message" => "Parametro incoreto para esta chamada."
+            ], 400);
+        }
+
+        $data = $request->only('pessoa_nome');
+        $validator = Validator::make($data, [
+            'pessoa_nome' => 'required|string|unique:pessoas'
+        ]);
+
+        //Retorna resposta de falha quando o request não é válido
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->messages()], 200);
+        }
+
         if (Pessoa::where('id', $id)->exists()) {
 
-            $statusQuery = DB::update('update pessoas set pessoa_nome = ?, status = ?, data_atualizacao = ?
-                                        where id = ?',[$request->nome, $request->status, date("Y-m-d H:i:s"), $id]);
+            $pessoa = Pessoa::find($id);
+            $pessoa->pessoa_nome = $request->pessoa_nome;
+            $pessoa->save();
 
-            if($statusQuery){
-                return response()->json([
-                    "message" => "Registro da pessoa foi atualizado com sucesso!"
-                ], 200);
-            } else {
-                return response()->json([
-                    "message" => "Não foi possível atualizar o registro da pessoa nesse momento!"
-                ], 400);
-            }
+            return response()->json([
+                'success' => true,
+                'message' => 'Recurso pessoa criado com sucesso.',
+                'data' => $pessoa
+            ], Response::HTTP_OK);
+
         }else{
             return response()->json([
                 "message" => "Pessoa não encontrada!"
@@ -179,14 +215,27 @@ class ApiController extends Controller
 
     public function deletePessoa ($id) {
         // logic to delete a student record goes here
+
+        //Efetua a validação dos dados da pessoa, verificando se já não existe no banco
+
+        if(!is_numeric($id)){
+            return response()->json([
+                "message" => "Parametro incoreto para esta chamada."
+            ], 400);
+        }
+
         if(Pessoa::where('id', $id)->exists()) {
 
-            $statusQuery = DB::update('update pessoas set status = ?, data_atualizacao = ?
-                                        where id = ?',[ 'I', date("Y-m-d H:i:s"), $id]);
+            $pessoa = Pessoa::find($id);
+            $pessoa->status = 'I';
+            $pessoa->save();
 
             return response()->json([
-            "message" => "Registro da pessoa foi desativado."
-            ], 202);
+                'success' => true,
+                'message' => 'Recurso pessoa removido com sucesso.',
+                'data' => $pessoa
+            ], Response::HTTP_OK);
+
         } else {
             return response()->json([
             "message" => "Registro da pessoa não foi encontrado."

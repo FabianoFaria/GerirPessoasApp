@@ -26,8 +26,7 @@ class CreatePessoasTable extends Migration
             $table->increments('id');
             $table->string('pessoa_nome', 100);
             $table->string('status', 1);
-            $table->timestamp('data_criacao', 0);
-            $table->timestamp('data_atualizacao', 0);
+            $table->timestamps($precision = 0);
         });
     }
 

@@ -21,9 +21,11 @@ Após clonar o projeto, configurar as variaveis de ambiente no arquivo .env
 ```bash
     cp .env.example .env
 ```
-Editar o arquivo .env com o editor de sua preferência, neste arquivo, configurar principalmente as variaveis de configuração do aplicativo, as credenciais de banco de dados.
-Obs: Como este projeto foi desenvolvido para integrar dados com o Postgres Sql, é apropriado configurar o .env com os dados configurados no docker-composer.yml
-Obs: Ainda no arquivo .env, nomear o DB_HOST com o mesmo nome que a imagem do Postgres configurada no docker-compose.yml (Ex: 'DB_HOST=postgres')
+- Editar o arquivo .env com o editor de sua preferência, neste arquivo, configurar principalmente as variaveis de configuração do aplicativo, as credenciais de banco de dados.
+
+- Obs: Como este projeto foi desenvolvido para integrar dados com o Postgres Sql, é apropriado configurar o .env com os dados configurados no docker-composer.yml
+
+- Obs 2: Ainda no arquivo .env, nomear o DB_HOST com o mesmo nome que a imagem do Postgres configurada no docker-compose.yml (Ex: 'DB_HOST=postgres')
 Após as configuraçõe no arquivo .env, efetuar a compilação da imagem do aplicativo
 
 ```bash
@@ -54,7 +56,7 @@ Então, gerar uma chave única para o aplicativo
     docker-compose exec -u root app php artisan key:generate
 ```
 
-Agora, vá até seu navegador e acesse o nome de domínio ou endereço IP do seu servidor na porta especificada no arquivo .env (Ex: )
+Agora, vá até seu navegador e acesse o nome de domínio ou endereço IP do seu servidor na porta especificada no arquivo .env (Ex: http://localhost:8100/ )
 
 Gerar, atualizar, derrubar tabelas do banco de dados do postgres
 

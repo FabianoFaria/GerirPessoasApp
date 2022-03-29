@@ -17,7 +17,7 @@ class PessoasTableSeeder extends Seeder
     public function run()
     {
         for($i = 0; $i < 100; $i++){
-            DB::table('pessoas')->insert(['pessoa_nome' => Str::random(10), 'status' => 'A', 'data_criacao' => date("Y-m-d H:i:s"), 'data_atualizacao' => date("Y-m-d H:i:s")]);
+            DB::table('pessoas')->insert(['pessoa_nome' => Str::random(10), 'status' => 'A']);
         }
     }
 }
