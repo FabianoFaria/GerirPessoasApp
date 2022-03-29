@@ -75,37 +75,36 @@ Gerar, atualizar, derrubar tabelas do banco de dados do postgres
 #### Cadastro do usuário
 
 ```http
-  GET /api/items
+  POST /api/register
 ```
 
 | Parâmetro   | Tipo       | Descrição                           |
 | :---------- | :--------- | :---------------------------------- |
-| `api_key` | `string` | **Obrigatório**. A chave da sua API |
-
-Registra o usuário para efetuar o login.
+| `name` | `string` | **Obrigatório**. Nome para identificação do usuário |
+| `email` | `string` | **Obrigatório**. Email utilizado para o login |
+| `password` | `string` | **Obrigatório**. Senha usada para o usuário efetua o login |
 
 
 #### Login do usuário
 
 ```http
-  GET /api/items
+  POST /api/login
 ```
 
 | Parâmetro   | Tipo       | Descrição                           |
 | :---------- | :--------- | :---------------------------------- |
-| `api_key` | `string` | **Obrigatório**. A chave da sua API |
-
-Efetua o login do usuário.
+| `email` | `string` | **Obrigatório**. Email utilizado para o login |
+| `password` | `string` | **Obrigatório**. Senha usada para o usuário efetua o login |
 
 #### Logout do usuário
 
 ```http
-  GET /api/items
+  POST /api/logout
 ```
 
 | Parâmetro   | Tipo       | Descrição                           |
 | :---------- | :--------- | :---------------------------------- |
-| `api_key` | `string` | **Obrigatório**. A chave da sua API |
+| `token` | `string` | **Obrigatório**. Token necessário para efetuar o processo de logout. |
 
 Efetua o logout do usuário.
 
@@ -120,7 +119,6 @@ Efetua o logout do usuário.
 | :---------- | :--------- | :---------------------------------- |
 | Nenhum parametro necessário |
 
-Lista todos os recursos.
 
 #### Retorna um item
 
@@ -166,5 +164,18 @@ Lista todos os recursos.
 | :---------- | :--------- | :------------------------------------------ |
 | `id`      | `int` | **Obrigatório**. O ID do item que você quer |
 
-Remove a pessoa especificada.
+
+
+## Referência das tecnologias utilizadas até o momento nesse projeto
+
+ - [Docker Engine](https://docs.docker.com/engine/)
+ - [Docker Compose](https://docs.docker.com/compose/)
+ - [PHP](https://www.php.net)
+ - [Compose](https://getcomposer.org)
+ - [Laravel](https://laravel.com)
+ - [Nginx](https://www.nginx.com)
+ - [Postgress](https://www.postgresql.org)
+
+
+
 
