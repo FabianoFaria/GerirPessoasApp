@@ -19,16 +19,17 @@ class ApiController extends Controller
     public function register(Request $request)
     {
     	//Validate data
-        $data = $request->only('name', 'email', 'password');
+        $data = $request->only('name', 'email', 'password', 'confirmPassword');
         $validator = Validator::make($data, [
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
-            'password' => 'required|string|min:6|max:50'
+            'password' => 'required|string|min:6|max:50',
+            'confirmPassword' =>'required|string|same:password|min:6|max:50'
         ]);
 
         //Retorna resposta de falha quando o request não é válido
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()], 200);
+            return response()->json(['message' => 'Os dados estão invalidos','error' => $validator->messages()], 422);
         }
 
         //Request é válido, gerar novo usuário
@@ -43,7 +44,7 @@ class ApiController extends Controller
             'success' => true,
             'message' => 'Usuário criado com sucesso.',
             'data' => $user
-        ], Response::HTTP_OK);
+        ], 201);
     }
 
     public function authenticate(Request $request)
@@ -58,7 +59,7 @@ class ApiController extends Controller
 
         //Retorna resposta de falha quando o request não é válido
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()], 200);
+            return response()->json(['message' => 'Os dados estao invalidos', 'error' => $validator->messages()], 422);
         }
 
         //Request é válido
@@ -95,7 +96,7 @@ class ApiController extends Controller
 
         //Retorna resposta de falha quando o request não é válido
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()], 200);
+            return response()->json(['message' => 'Os dados estão invalidos', 'error' => $validator->messages()], 200);
         }
 
 		//Request é validado, efetua o logout        
@@ -157,7 +158,7 @@ class ApiController extends Controller
 
         //Retorna resposta de falha quando o request não é válido
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()], 200);
+            return response()->json(['error' => $validator->messages()], 422);
         }
 
         $pessoa = Pessoa::create([
@@ -169,7 +170,7 @@ class ApiController extends Controller
             'success' => true,
             'message' => 'Recurso pessoa criado com sucesso.',
             'data' => $pessoa
-        ], Response::HTTP_OK);
+        ], 200);
 
     }
 

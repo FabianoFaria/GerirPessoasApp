@@ -70,6 +70,16 @@ Gerar, atualizar, derrubar tabelas do banco de dados do postgres
     docker-compose exec -u root app php artisan db:seed
 ```
 
+## Execução de testes unitarios
+
+Execução de testes unitarios
+
+```bash
+
+  docker-compose exec -u root app vendor/bin/phpunit
+
+```
+
 ## Documentação da API
 
 #### Cadastro do usuário
@@ -83,6 +93,7 @@ Gerar, atualizar, derrubar tabelas do banco de dados do postgres
 | `name` | `string` | **Obrigatório**. Nome para identificação do usuário |
 | `email` | `string` | **Obrigatório**. Email utilizado para o login |
 | `password` | `string` | **Obrigatório**. Senha usada para o usuário efetua o login |
+| `confirmPassword` | `string` | **Obrigatório**. Confirmação da senha usada para o usuário efetua o login |
 
 
 #### Login do usuário
